@@ -95,11 +95,11 @@ public class IQAdminHandler {
         // Analyze the action to perform based on the included element
         @SuppressWarnings("unchecked")
         List<Element> itemsList = element.elements("item");
-        
-        if (!itemsList.isEmpty()) {
+        if (!itemsList.isEmpty() && packet.getFrom() == null) {
             handleItemsElement(role, itemsList, reply);
-        }
-        else {
+        } else if (!itemsList.isEmpty() && !itemsList.toString().contains(packet.getFrom().toBareJID())) {
+            handleItemsElement(role, itemsList, reply);
+        } else {
             // An unknown and possibly incorrect element was included in the query
             // element so answer a BAD_REQUEST error
             reply.setChildElement(packet.getChildElement().createCopy());
